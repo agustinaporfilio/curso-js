@@ -1,39 +1,90 @@
+// GYM MANAGER
+
 const gimnasio = "Gym Manager";
 
-let socio = prompt("¡Bienvenido! Ingresá tu nombre");
 
-let opcion = prompt("¿A qué clase querés anotarte? 1. BodyCombat 2. BodyPump 3. Funcional");
+// FUNCION 1: Pedir nombre del socio
 
-// Repetir si la opción es incorrecta
+function pedirSocio(mensaje) {
+    let socio = prompt(mensaje);
 
-while (opcion !== "1" && opcion !== "2" && opcion !== "3") {
-    opcion = prompt("Opción incorrecta. Elegí 1, 2 o 3");
+    return socio;
 }
 
-// Asignar la clase elegida
 
-let clase;
+// FUNCION 2: Solicitar la clase
 
-switch (opcion) {
-    case "1":
-        clase = "BodyCombat";
-        break;
+function pedirClase(socio) {
 
-    case "2":
-        clase = "BodyPump";
-        break;
+    let opcion = parseInt(prompt(
+        "Hola " + socio +
+        ". ¿A qué clase querés anotarte? 1. BodyCombat 2. BodyPump 3. Funcional"
+    ));
 
-    case "3":
-        clase = "Funcional";
-        break;
+    while (opcion !== 1 && opcion !== 2 && opcion !== 3) {
+        opcion = parseInt(
+            prompt("Opción incorrecta. Elegí 1, 2 o 3")
+        );
+    }
+
+    return opcion;
 }
 
-// Verificar apto médico
 
-let aptoMedico = prompt("¿Tenés el apto médico al día? si/no");
+// FUNCION 3: Obtener el nombre de la clase
 
-if (aptoMedico === "si") {
-    alert("Hola " + socio + ", te anotaste correctamente a " + clase);
-} else {
-    alert("No podés inscribirte a la clase");
+function obtenerClase(opcion) {
+
+    let clase;
+
+    switch (opcion) {
+        case 1:
+            clase = "BodyCombat";
+            break;
+
+        case 2:
+            clase = "BodyPump";
+            break;
+
+        case 3:
+            clase = "Funcional";
+            break;
+    }
+
+    return clase;
 }
+
+
+// FUNCION 4: Mostrar el resultado
+// FUNCION FLECHA
+
+const mostrarResultado = (socio, clase, aptoMedico) => {
+
+    if (aptoMedico === "si") {
+        alert(
+             socio +
+            ", te anotaste correctamente a " + clase
+        );
+    } else {
+        alert(
+            "No podés inscribirte. Necesitás el apto médico al día."
+        );
+    }
+};
+
+
+// PROGRAMA PRINCIPAL
+
+let socio = pedirSocio(
+    "¡Bienvenido a " + gimnasio + "! Ingresá tu nombre"
+);
+
+let opcion = pedirClase(socio);
+
+let clase = obtenerClase(opcion);
+
+let aptoMedico = prompt(
+    "¿Tenés el apto médico al día? si/no"
+);
+
+mostrarResultado(socio, clase, aptoMedico);
