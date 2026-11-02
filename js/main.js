@@ -31,21 +31,23 @@ class Clase {
 
 // INSTANCIAS
 
-const bodyCombat = new Clase(1, "BodyCombat", "18:00", 20, "Agus");
+const bodyCombat = new Clase(1, "BodyCombat", "18:00", 20, "Agustina");
 const bodyPump = new Clase(2, "BodyPump", "19:00", 15, "Leo");
 const funcional = new Clase(3, "Funcional", "20:00", 10, "Paula");
 const spinning = new Clase(4, "Spinning", "17:00", 12, "Christian");
 const yoga = new Clase(5, "Yoga", "16:00", 18, "Karina");
+const personalizada = new Clase(6, "Personalizada", "21:00", 1, "Fabricio");
 
 
-// ARRAYS
+// ARRAY DE OBJETOS
 
 let clasesDisponibles = [
     bodyCombat,
     bodyPump,
     funcional,
     spinning,
-    yoga
+    yoga,
+    personalizada
 ];
 
 let misClases = [];
@@ -56,7 +58,7 @@ let misClases = [];
 function elegirClase(mensaje) {
     let opcion = parseInt(prompt(
         mensaje +
-        " 1. BodyCombat 2. BodyPump 3. Funcional 4. Spinning 5. Yoga"
+        " 1. BodyCombat 2. BodyPump 3. Funcional 4. Spinning 5. Yoga 6. Personalizada"
     ));
 
     while (
@@ -64,10 +66,11 @@ function elegirClase(mensaje) {
         opcion !== 2 &&
         opcion !== 3 &&
         opcion !== 4 &&
-        opcion !== 5
+        opcion !== 5 &&
+        opcion !== 6
     ) {
         opcion = parseInt(
-            prompt("Opción incorrecta. Elegí del 1 al 5")
+            prompt("Opción incorrecta. Elegí del 1 al 6")
         );
     }
 
@@ -75,44 +78,21 @@ function elegirClase(mensaje) {
 }
 
 
-// OBTENER CLASE
+// FIND: BUSCAR CLASE POR ID
 
-function obtenerClase(opcion) {
-    let clase;
-
-    switch (opcion) {
-        case 1:
-            clase = bodyCombat;
-            break;
-
-        case 2:
-            clase = bodyPump;
-            break;
-
-        case 3:
-            clase = funcional;
-            break;
-
-        case 4:
-            clase = spinning;
-            break;
-
-        case 5:
-            clase = yoga;
-            break;
-    }
-
-    return clase;
+function buscarClase(id) {
+    return clasesDisponibles.find(
+        clase => clase.id === id
+    );
 }
 
 
-// MOSTRAR CLASES
+// MAP: TRANSFORMAR OBJETOS EN TEXTO
 
 function mostrarClases(lista, titulo) {
-    let mensaje = titulo + ":\n";
 
-    for (let clase of lista) {
-        mensaje = mensaje +
+    let clasesFormateadas = lista.map(
+        clase =>
             "- " +
             clase.nombre +
             " (" +
@@ -121,11 +101,17 @@ function mostrarClases(lista, titulo) {
             clase.profe +
             " - Cupos: " +
             clase.cupos +
-            ")\n";
+            ")"
+    );
+
+    let mensaje = titulo + ":\n";
+
+    for (let clase of clasesFormateadas) {
+        mensaje = mensaje + clase + "\n";
     }
 
     alert(mensaje);
-    console.log(mensaje);
+    console.log(clasesFormateadas);
 }
 
 
@@ -156,14 +142,26 @@ while (opcionMenu !== 6) {
         "6. Salir"
     ));
 
+
     switch (opcionMenu) {
 
         // VER CLASES DISPONIBLES
+        // FILTER: SOLO MUESTRA LAS QUE TIENEN CUPO
 
         case 1:
+
+            let clasesConCupo = clasesDisponibles.filter(
+                clase => clase.cupos > 0
+            );
+
             mostrarClases(
-                clasesDisponibles,
+                clasesConCupo,
                 "Clases disponibles"
+            );
+
+            console.log(
+                "Clases con cupo:",
+                clasesConCupo
             );
 
             break;
@@ -172,12 +170,17 @@ while (opcionMenu !== 6) {
         // ANOTARSE A UNA CLASE
 
         case 2:
+
             let opcionClase = elegirClase(
                 "¿A qué clase querés anotarte?"
             );
 
-            let clase = obtenerClase(
-                opcionClase
+            // FIND
+            let clase = buscarClase(opcionClase);
+
+            console.log(
+                "Clase seleccionada:",
+                clase
             );
 
             let aptoMedico = prompt(
@@ -193,7 +196,8 @@ while (opcionMenu !== 6) {
             } else if (misClases.includes(clase)) {
 
                 alert(
-                    "Ya estás anotado a " + clase.nombre
+                    "Ya estás anotado a " +
+                    clase.nombre
                 );
 
             } else if (clase.reservarCupo()) {
@@ -225,6 +229,7 @@ while (opcionMenu !== 6) {
         // VER MIS CLASES
 
         case 3:
+
             if (misClases.length === 0) {
 
                 alert(
@@ -245,6 +250,7 @@ while (opcionMenu !== 6) {
         // CAMBIAR UNA RESERVA
 
         case 4:
+
             if (misClases.length === 0) {
 
                 alert(
@@ -263,7 +269,8 @@ while (opcionMenu !== 6) {
                 "¿Qué reserva querés cambiar?"
             );
 
-            let claseActual = obtenerClase(
+            // FIND
+            let claseActual = buscarClase(
                 opcionActual
             );
 
@@ -283,9 +290,11 @@ while (opcionMenu !== 6) {
                 "?"
             );
 
-            let claseNueva = obtenerClase(
+            // FIND
+            let claseNueva = buscarClase(
                 opcionNueva
             );
+
 
             if (claseNueva === claseActual) {
 
@@ -322,14 +331,8 @@ while (opcionMenu !== 6) {
                 );
 
                 console.log(
-                    claseActual.nombre +
-                    " liberó un cupo"
-                );
-
-                console.log(
-                    claseNueva.nombre +
-                    " - Cupos restantes: " +
-                    claseNueva.cupos
+                    "Nueva reserva:",
+                    claseNueva
                 );
 
             } else {
@@ -346,6 +349,7 @@ while (opcionMenu !== 6) {
         // CANCELAR ULTIMA RESERVA
 
         case 5:
+
             if (misClases.length === 0) {
 
                 alert(
@@ -364,9 +368,8 @@ while (opcionMenu !== 6) {
                 );
 
                 console.log(
-                    claseCancelada.nombre +
-                    " - Cupos disponibles: " +
-                    claseCancelada.cupos
+                    "Reserva cancelada:",
+                    claseCancelada
                 );
             }
 
@@ -376,8 +379,11 @@ while (opcionMenu !== 6) {
         // SALIR
 
         case 6:
+
             alert(
-                "¡Hasta pronto, " + socio + "!"
+                "¡Hasta pronto, " +
+                socio +
+                "!"
             );
 
             console.log(
@@ -388,6 +394,7 @@ while (opcionMenu !== 6) {
 
 
         default:
+
             alert(
                 "Opción incorrecta. Elegí del 1 al 6"
             );
